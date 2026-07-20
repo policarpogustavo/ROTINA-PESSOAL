@@ -250,29 +250,5 @@ function renderGrid() {
   });
 }
 
-function csvEscape(value) {
-  const str = String(value ?? '');
-  if (/[",\r\n]/.test(str)) return `"${str.replace(/"/g, '""')}"`;
-  return str;
-}
-
-function exportToExcel() {
-  const header = ['Horário', 'Atividade', ...DAYS];
-  const rows = blocks.map((block, i) => [block.time, block.label, ...DAYS.map((_, d) => notes[i][d])]);
-  const csv = [header, ...rows].map((row) => row.map(csvEscape).join(',')).join('\r\n');
-
-  const blob = new Blob(['﻿' + csv], { type: 'text/csv;charset=utf-8;' });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = 'minha-semana.csv';
-  document.body.appendChild(a);
-  a.click();
-  document.body.removeChild(a);
-  URL.revokeObjectURL(url);
-}
-
-document.getElementById('downloadBtn')?.addEventListener('click', exportToExcel);
-
 renderLegend();
 renderGrid();
